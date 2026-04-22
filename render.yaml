@@ -2,20 +2,20 @@ services:
   - type: web
     name: aero-web-control
     env: node
-    plan: free
+    plan: starter
     buildCommand: npm install
     startCommand: npm start
     autoDeploy: true
     healthCheckPath: /api/health
+    disk:
+      name: aero-data
+      mountPath: /opt/render/project/src/data
+      sizeGB: 1
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
         value: 10000
-      - key: ADMIN_USERNAME
-        sync: false
-      - key: ADMIN_PASSWORD_HASH
-        sync: false
       - key: JWT_SECRET
         sync: false
       - key: JWT_EXPIRES_IN
@@ -23,4 +23,4 @@ services:
       - key: PRESENCE_TTL_SECONDS
         value: 60
       - key: CORS_ORIGIN
-        value: "*"
+        value: "https://1bladess.github.io"

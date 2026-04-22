@@ -16,8 +16,16 @@ if (queryApiBase) {
 
 const isGithubPages = window.location.hostname.endsWith('github.io');
 const storedApiBase = (localStorage.getItem('aero_api_base') || '').trim();
-const defaultApiBase = window.location.hostname.endsWith('github.io') ? 'http://localhost:8080' : '';
-const API_BASE = (storedApiBase || defaultApiBase).trim().replace(/\/+$/, '');
+const hostedApiBase = 'https://aero-web-control.onrender.com';
+const defaultApiBase = isGithubPages ? hostedApiBase : '';
+let resolvedApiBase = (storedApiBase || defaultApiBase).trim().replace(/\/+$/, '');
+
+if (isGithubPages && /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(resolvedApiBase)) {
+  resolvedApiBase = hostedApiBase;
+  localStorage.setItem('aero_api_base', hostedApiBase);
+}
+
+const API_BASE = resolvedApiBase;
 
 function isInvalidApiBase(base) {
   if (!base) return false;

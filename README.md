@@ -25,3 +25,20 @@ Aero client API usage:
 - Heartbeat: POST /api/presence/heartbeat
 - Devlog: GET /api/devlog
 - Update manifest: GET /api/updates/manifest?platform=windows&channel=stable
+
+Permanent Hosting (Render)
+1. Open: https://render.com/deploy?repo=https://github.com/1Bladess/aeroadminpage
+2. Choose service name: aero-web-control (or your preferred unique name).
+3. Keep plan as Starter for always-on hosting and persistent disk support.
+4. Set required env var:
+   - JWT_SECRET: long random string
+5. Deploy.
+
+After deploy:
+1. Backend URL is typically https://aero-web-control.onrender.com
+2. Health check: https://aero-web-control.onrender.com/api/health
+3. Admin page: https://1bladess.github.io/aeroadminpage/admin.html
+
+Notes:
+- Frontend now defaults to the hosted backend URL on GitHub Pages.
+- To override API target temporarily, append ?api=https://your-backend-domain to the page URL.
