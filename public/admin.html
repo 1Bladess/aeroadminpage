@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Aero Admin</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>Aero Admin</h1>
+    <a class="btn" href="/">Public Site</a>
+  </header>
+
+  <main class="container grid-2">
+    <section class="card" id="loginCard">
+      <h2>Owner Login</h2>
+      <p class="muted">Only your configured owner account can sign in.</p>
+      <form id="loginForm" class="stack">
+        <input id="username" type="text" placeholder="Username" required />
+        <input id="password" type="password" placeholder="Password" required />
+        <button class="btn" type="submit">Sign In</button>
+      </form>
+      <div id="loginError" class="error"></div>
+    </section>
+
+    <section class="card hidden" id="adminCard">
+      <div class="row-between">
+        <h2>Control Panel</h2>
+        <button id="logoutBtn" class="btn secondary" type="button">Logout</button>
+      </div>
+
+      <h3>Create Devlog Post</h3>
+      <form id="devlogForm" class="stack">
+        <input id="postTitle" type="text" placeholder="Title" required />
+        <input id="postTag" type="text" placeholder="Tag (UPDATE/FEATURE/FIX)" />
+        <textarea id="postContent" rows="4" placeholder="Content" required></textarea>
+        <button class="btn" type="submit">Publish Post</button>
+      </form>
+
+      <h3>Current Devlog</h3>
+      <div id="adminDevlogList" class="list"></div>
+
+      <h3>Update Manifest</h3>
+      <p class="muted">Edit JSON for channel=stable, platform=windows</p>
+      <textarea id="manifestJson" rows="10"></textarea>
+      <button id="saveManifestBtn" class="btn" type="button">Save Manifest</button>
+      <div id="adminMessage" class="ok"></div>
+    </section>
+  </main>
+
+  <script src="/admin.js"></script>
+</body>
+</html>
