@@ -9,10 +9,34 @@ const manifestJson = document.getElementById('manifestJson');
 const saveManifestBtn = document.getElementById('saveManifestBtn');
 const adminMessage = document.getElementById('adminMessage');
 
+const queryApiBase = new URLSearchParams(window.location.search).get('api');
+if (queryApiBase) {
+  localStorage.setItem('aero_api_base', queryApiBase);
+}
+
+const storedApiBase = (localStorage.getItem('aero_api_base') || '').trim();
+const defaultApiBase = window.location.hostname.endsWith('github.io') ? 'http://localhost:8080' : '';
+const API_BASE = (storedApiBase || defaultApiBase).trim();
+
+let authToken = (localStorage.getItem('aero_admin_token') || '').trim();
+
+function apiUrl(path) {
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  if (!API_BASE) return normalizedPath;
+  return `${API_BASE.replace(/\/+$/, '')}${normalizedPath}`;
+}
+
+function authHeader() {
+  return authToken ? { Authorization: `Bearer ${authToken}` } : {};
+}
+
 async function api(path, options = {}) {
-  const res = await fetch(path, {
-    credentials: 'include',
-    headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+  const res = await fetch(apiUrl(path), {
+    headers: {
+      'Content-Type': 'application/json',
+      ...(options.headers || {}),
+      ...authHeader()
+    },
     ...options
   });
 
@@ -55,10 +79,14 @@ loginForm.addEventListener('submit', async (e) => {
   const password = document.getElementById('password').value;
 
   try {
-    await api('/api/auth/login', {
+    const loginData = await api('/api/auth/login', {
       method: 'POST',
       body: JSON.stringify({ username, password })
     });
+    if (loginData && loginData.token) {
+      authToken = String(loginData.token);
+      localStorage.setItem('aero_admin_token', authToken);
+    }
     showAdmin();
     await refreshDevlog();
     await loadManifest();
@@ -68,7 +96,13 @@ loginForm.addEventListener('submit', async (e) => {
 });
 
 logoutBtn.addEventListener('click', async () => {
-  await api('/api/auth/logout', { method: 'POST' });
+  try {
+    await api('/api/auth/logout', { method: 'POST' });
+  } catch (_err) {
+    // Clear local state even if backend session is already gone.
+  }
+  authToken = '';
+  localStorage.removeItem('aero_admin_token');
   showLogin();
 });
 

@@ -1,5 +1,20 @@
+const queryApiBase = new URLSearchParams(window.location.search).get('api');
+if (queryApiBase) {
+  localStorage.setItem('aero_api_base', queryApiBase);
+}
+
+const storedApiBase = (localStorage.getItem('aero_api_base') || '').trim();
+const defaultApiBase = window.location.hostname.endsWith('github.io') ? 'http://localhost:8080' : '';
+const API_BASE = (storedApiBase || defaultApiBase).trim();
+
+function apiUrl(path) {
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  if (!API_BASE) return normalizedPath;
+  return `${API_BASE.replace(/\/+$/, '')}${normalizedPath}`;
+}
+
 async function fetchOnlineCount() {
-  const res = await fetch('/api/presence/count');
+  const res = await fetch(apiUrl('/api/presence/count'));
   if (!res.ok) return;
   const data = await res.json();
   const el = document.getElementById('onlineCount');
@@ -7,7 +22,7 @@ async function fetchOnlineCount() {
 }
 
 async function fetchDevlog() {
-  const res = await fetch('/api/devlog?limit=20');
+  const res = await fetch(apiUrl('/api/devlog?limit=20'));
   if (!res.ok) return;
   const data = await res.json();
   const list = document.getElementById('devlogList');

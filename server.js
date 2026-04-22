@@ -26,9 +26,10 @@ if (!JWT_SECRET) {
   process.exit(1);
 }
 
+const CORS_ORIGIN = (process.env.CORS_ORIGIN || '*').trim();
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || '*',
-  credentials: true
+  origin: CORS_ORIGIN === '*' ? true : CORS_ORIGIN,
+  credentials: false
 }));
 app.use(express.json({ limit: '1mb' }));
 app.use(cookieParser());
@@ -131,7 +132,7 @@ app.post('/api/auth/login', async (req, res) => {
     maxAge: 1000 * 60 * 60 * 12
   });
 
-  return res.json({ ok: true, username: ADMIN_USERNAME });
+  return res.json({ ok: true, username: ADMIN_USERNAME, token });
 });
 
 app.post('/api/auth/logout', (req, res) => {
