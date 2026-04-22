@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Aero Client</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>Aero Client</h1>
+    <a class="btn" href="/admin.html">Admin</a>
+  </header>
+
+  <main class="container">
+    <section class="card hero">
+      <h2>Launcher Status</h2>
+      <p class="muted">Live data from your backend</p>
+      <div class="metric-row">
+        <div>
+          <div class="metric-label">Users Online</div>
+          <div id="onlineCount" class="metric-value">0</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>Devlog</h3>
+      <div id="devlogList" class="list"></div>
+    </section>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
